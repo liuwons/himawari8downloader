@@ -1,10 +1,10 @@
+import sys
 import json
 import requests
 from PIL import Image
 from io import BytesIO
 from datetime import datetime
 from dateutil import tz
-
 
 conf ={
     'last_refresh_url': 'http://himawari8-dl.nict.go.jp/himawari8/img/D531106/latest.json',
@@ -31,7 +31,10 @@ def download(args):
             r = requests.get(url)
             tile = Image.open(BytesIO(r.content))
             png.paste(tile, (550 * row, 550 * col, 550 * (row + 1), 550 * (col + 1)))
-    fpath = "%s.png" % utf2local(args['time']).strftime("%Y/%m/%d/%H%M%S").replace('/', '')
+    if 'fout' in args:
+        fpath = args['fout']
+    else:
+        fpath = "%s.png" % utf2local(args['time']).strftime("%Y/%m/%d/%H%M%S").replace('/', '')
     print 'Download over, save to file %s' % fpath
     png.save(fpath, "PNG")
 
@@ -43,12 +46,20 @@ def get_last_time():
     return last_refresh_time
 
 
-def get_last_image():
+def get_last_image(fout=None, scale=1):
+    print 'output[%s] scale[%i]' %(fout, scale)
     last_refresh_time = get_last_time()
     args = {'time': last_refresh_time}
-    args['scale'] = conf['scale']
+    args['scale'] = scale
+    if fout is not None:
+        args['fout'] = fout
     download(args)
 
 
 if __name__ == '__main__':
-    get_last_image()
+    if len(sys.argv) == 1:
+        get_last_image()
+    elif len(sys.argv) == 2:
+        get_last_image(fout=sys.argv[1])
+    elif len(sys.argv) == 3:
+        get_last_image(fout=sys.argv[1], scale=int(sys.argv[2]))
