@@ -13,6 +13,7 @@ conf ={
 }
 
 
+# Convert time
 def utf2local(utc):
     from_zone = tz.tzutc()
     to_zone = tz.tzlocal()
