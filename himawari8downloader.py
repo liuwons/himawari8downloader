@@ -7,7 +7,7 @@ from datetime import datetime
 from dateutil import tz
 
 conf ={
-    'last_refresh_url': 'http://himawari8-dl.nict.go.jp/himawari8/img/D531106/latest.json',
+    'last_refresh_url': 'http://himawari8-dl.nict.go.jp/himawari8/img/D531106/latest.json',  # latest photo
     'img_url_pattern': 'http://himawari8-dl.nict.go.jp/himawari8/img/D531106/%id/550/%s_%i_%i.png',    # scale, time, row, col
     'scale': 1,     # 1, 2, 4, 8, 16, 20.  Width and height are both 550*scale
 }
